@@ -1,0 +1,1148 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model tblacessoriosxcategorias {
+  acxid                Int                  @id @default(autoincrement())
+  catID                Int                  @db.UnsignedInt
+  acessID              Int                  @db.UnsignedInt
+  siteID               Int?
+  tblmarketingconteudo tblmarketingconteudo @relation(fields: [catID], references: [idmktcontent], onDelete: NoAction, onUpdate: NoAction, map: "FK__tblacessoriosxcategorias_1")
+
+  @@index([catID], map: "FK__tblacessoriosxcategorias_1_idx")
+  @@index([acessID], map: "FK_tblacessorios_idx")
+  @@map("_tblacessoriosxcategorias")
+}
+
+model tblacessoriosxestoque {
+  aexid         Int           @id @default(autoincrement())
+  acessID       Int           @db.UnsignedInt
+  estqPrdid     Int
+  tblacessorios tblacessorios @relation(fields: [acessID], references: [acessID], onDelete: NoAction, onUpdate: NoAction, map: "fkacess")
+
+  @@index([acessID], map: "fkacess_idx")
+  @@index([estqPrdid], map: "fkestqprd_idx")
+  @@map("_tblacessoriosxestoque")
+}
+
+model tbladmindatas {
+  admindtid         Int      @id @default(autoincrement())
+  adminID           Int      @db.UnsignedInt
+  tipoDatasID       Int      @db.UnsignedInt
+  data              DateTime @db.DateTime(0)
+  LimiteVesp        Int      @default(0) @db.UnsignedInt
+  LimiteNot         Int      @default(0) @db.UnsignedInt
+  LimiteTodoPeriodo Int      @default(0) @db.UnsignedInt
+  LimiteHM          Int      @default(0) @db.UnsignedInt
+  LimiteCom         Int      @default(0) @db.UnsignedInt
+  TextMat           String?  @db.VarChar(100)
+  TextVesp          String?  @db.VarChar(100)
+  TextNot           String?  @db.VarChar(100)
+  TextTodoPeriodo   String?  @db.VarChar(100)
+  TextHM            String?  @db.VarChar(100)
+  TextCom           String?  @db.VarChar(100)
+  HLimtMat          Int      @default(0) @db.UnsignedInt
+  HLimtVesp         Int      @default(0) @db.UnsignedInt
+  HLimtNot          Int      @default(0) @db.UnsignedInt
+  HLimtCom          Int      @default(0) @db.UnsignedInt
+  HLimtTodoPer      Int      @default(0) @db.UnsignedInt
+  HLimtHM           Int      @default(0) @db.UnsignedInt
+
+  @@index([tipoDatasID], map: "FK__tblAdminDatas_2")
+  @@index([adminID], map: "FK_tblAdminDatas_1")
+  @@map("_tbladmindatas")
+}
+
+model tbladminxcidadesxbairros {
+  acbxid              Int                 @id @default(autoincrement())
+  adminCidadeID       Int                 @db.UnsignedInt
+  BairroID            Int
+  Frete               Decimal             @db.Decimal(8, 2)
+  Entrega             Int                 @db.UnsignedInt
+  Noturno             Decimal             @default(20.00) @db.Decimal(8, 2)
+  lat                 String?             @db.VarChar(75)
+  lon                 String?             @db.VarChar(75)
+  infoData            String?             @db.VarChar(345)
+  tbladminxtblcidades tbladminxtblcidades @relation(fields: [adminCidadeID], references: [adminCidadeID], onDelete: NoAction, onUpdate: NoAction, map: "FK__tblAdminXCidadesXBairros_1")
+
+  @@index([adminCidadeID], map: "FK__tblAdminXCidadesXBairros_1")
+  @@index([BairroID], map: "FK__tblAdminXCidadesXBairros_2")
+  @@map("_tbladminxcidadesxbairros")
+}
+
+model tbladminxtblacessorios {
+  aaxid            Int           @id @default(autoincrement())
+  adminID          Int           @db.UnsignedInt
+  repasse          Decimal       @default(0.00) @db.Decimal(8, 2)
+  valor            Decimal       @default(0.00) @db.Decimal(8, 2)
+  ativo            Int           @default(0) @db.UnsignedTinyInt
+  acessID          Int           @db.UnsignedInt
+  desconto         Decimal       @default(0.00) @db.Decimal(8, 2)
+  cidadesID        Int           @db.UnsignedInt
+  indiceDestaque   Int           @default(0) @db.UnsignedInt
+  destaqueVertical Int           @default(0) @db.UnsignedTinyInt
+  valorCusto       Decimal?      @db.Decimal(8, 2)
+  destaque         Int?          @default(0)
+  tblacessorios    tblacessorios @relation(fields: [acessID], references: [acessID], onDelete: NoAction, onUpdate: NoAction, map: "FK__tblAdminXtblAcessorios_3")
+
+  @@index([adminID], map: "FK__tblAdminXtblAcessorios_1")
+  @@index([acessID], map: "FK__tblAdminXtblAcessorios_3")
+  @@map("_tbladminxtblacessorios")
+}
+
+model tbladminxtblcidades {
+  adminCidadeID            Int                        @id @default(autoincrement()) @db.UnsignedInt
+  adminID                  Int                        @db.UnsignedInt
+  cidadesID                Int
+  tbladminxcidadesxbairros tbladminxcidadesxbairros[]
+
+  @@index([adminID], map: "FK__tblAdminXtblCidades_1")
+  @@index([cidadesID], map: "FK__tblAdminXtblCidades_2")
+  @@map("_tbladminxtblcidades")
+}
+
+model tbladminxtblflores {
+  afxid    Int  @id @default(autoincrement())
+  floresId Int?
+  adminID  Int? @db.UnsignedInt
+
+  @@index([adminID], map: "fkadmin_idx")
+  @@index([floresId], map: "fkflores_idx")
+  @@map("_tbladminxtblflores")
+}
+
+model tbladminxtblprodutos {
+  idAdminxprodutos Int         @id @default(autoincrement()) @db.UnsignedInt
+  adminID          Int         @db.UnsignedInt
+  prdID            Int         @db.UnsignedInt
+  valorRepasse     Decimal     @default(0.00) @db.Decimal(8, 2)
+  valorVenda       Decimal     @default(0.00) @db.Decimal(8, 2)
+  valorDesconto    Decimal     @default(0.00) @db.Decimal(8, 2)
+  ativo            Boolean?    @default(false)
+  valorCusto       Decimal     @default(0.00) @db.Decimal(8, 2)
+  destaque         Int?        @default(0) @db.UnsignedTinyInt
+  indiceCategoria  Int         @default(0) @db.UnsignedInt
+  indiceDestaque   Int         @default(0) @db.UnsignedInt
+  cidadesID        Int         @db.UnsignedInt
+  sugestao         Boolean?    @default(false)
+  maisVendido      Boolean?    @default(false)
+  tbladmin         tbladmin    @relation(fields: [adminID], references: [adminID], onDelete: NoAction, onUpdate: NoAction, map: "FK__tblAdminXtblProdutos_1")
+  tblprodutos      tblprodutos @relation(fields: [prdID], references: [prdID], onDelete: NoAction, onUpdate: NoAction, map: "FK__tblAdminXtblProdutos_2")
+
+  @@index([adminID], map: "FK__tblAdminXtblProdutos_1")
+  @@index([prdID], map: "FK__tblAdminXtblProdutos_2")
+  @@map("_tbladminxtblprodutos")
+}
+
+model tblestoquereview {
+  estrvwID     Int       @id @default(autoincrement())
+  pedId        Int?
+  estqprdid    Int?
+  prdvisto     Int?      @default(0)
+  dataEstoque  DateTime? @default(now()) @db.Timestamp(0)
+  qtd          Int?      @default(0)
+  tipoEstoque  Int?      @default(0)
+  entradaSaida Int?      @default(0)
+
+  @@index([estqprdid], map: "fk_estoque_idx")
+  @@map("_tblestoquereview")
+}
+
+model tblmarcacaoxtblpedidos {
+  mpID                 Int                  @id @default(autoincrement())
+  marid                Int                  @db.UnsignedInt
+  pedid                Int                  @db.UnsignedInt
+  data_                DateTime             @default(now()) @db.Timestamp(0)
+  tblpedidos           tblpedidos           @relation(fields: [pedid], references: [pedID], onDelete: NoAction, onUpdate: NoAction, map: "fd")
+  tblmarketingconteudo tblmarketingconteudo @relation(fields: [marid], references: [idmktcontent], onDelete: NoAction, onUpdate: NoAction, map: "fk")
+
+  @@index([marid], map: "fk_idx")
+  @@index([pedid], map: "fk_marcacaoXpedidos_idx")
+  @@map("_tblmarcacaoxtblpedidos")
+}
+
+model tblpedidosxstatus {
+  psxid            Int      @id @default(autoincrement())
+  pedID            Int      @db.UnsignedInt
+  stsID            Int      @db.UnsignedInt
+  DescricaoAdmin   String?  @db.VarChar(5000)
+  DescricaoCliente String?  @db.VarChar(5000)
+  data_            DateTime @default(now()) @db.Timestamp(0)
+
+  @@index([pedID], map: "FK__tblPedidosXStatus_1")
+  @@index([stsID], map: "FK__tblPedidosXStatus_2")
+  @@map("_tblpedidosxstatus")
+}
+
+model tblprodutosxacessorios {
+  paxid   Int  @id @default(autoincrement())
+  prdID   Int
+  acessID Int?
+
+  @@map("_tblprodutosxacessorios")
+}
+
+model tblprodutosxcategorias {
+  pcxid                Int                  @id @default(autoincrement())
+  prdID                Int                  @db.UnsignedInt
+  catID                Int                  @db.UnsignedInt
+  siteID               Int                  @db.UnsignedInt
+  tblmarketingconteudo tblmarketingconteudo @relation(fields: [catID], references: [idmktcontent], onDelete: NoAction, onUpdate: NoAction, map: "FK_categorias")
+
+  @@index([prdID], map: "FK__tblProdutosXCategorias_1")
+  @@index([siteID], map: "FK__tblsiteid")
+  @@index([catID], map: "fk_categoria_idx")
+  @@map("_tblprodutosxcategorias")
+}
+
+model tblprodutosxestoque {
+  pexid     Int @id @default(autoincrement())
+  prdID     Int @db.UnsignedInt
+  estqPrdid Int
+
+  @@index([estqPrdid], map: "fkestoque_idx")
+  @@index([prdID], map: "fkprodutos_idx")
+  @@map("_tblprodutosxestoque")
+}
+
+model tblprodutosxsimilares {
+  psxid        Int  @id @default(autoincrement())
+  prdID        Int  @db.UnsignedInt
+  prdIDsimilar Int  @db.UnsignedInt
+  siteid       Int?
+
+  @@index([prdID], map: "fk_produto_idx")
+  @@map("_tblprodutosxsimilares")
+}
+
+model tblsitesxcategorias {
+  sitecatID Int @id @default(autoincrement()) @db.UnsignedInt
+  siteID    Int @db.UnsignedInt
+  catID     Int @db.UnsignedInt
+  temaID    Int @default(1)
+
+  @@index([catID], map: "fkcategoria_idx")
+  @@index([siteID], map: "fksite_idx")
+  @@map("_tblsitesxcategorias")
+}
+
+model tblsitextblacessorios {
+  saxid         Int           @id @default(autoincrement())
+  acessID       Int           @db.UnsignedInt
+  siteID        Int           @db.UnsignedInt
+  tblacessorios tblacessorios @relation(fields: [acessID], references: [acessID], onDelete: NoAction, onUpdate: NoAction, map: "acess")
+
+  @@index([acessID], map: "fk_acess_idx")
+  @@index([siteID], map: "fk_sites_idx")
+  @@map("_tblsitextblacessorios")
+}
+
+model tblsitextblprodutos {
+  spxid  Int @id @default(autoincrement())
+  prdID  Int @db.UnsignedInt
+  siteID Int @db.UnsignedInt
+
+  @@index([prdID], map: "fk_produtos_idx")
+  @@index([siteID], map: "sdf_idx")
+  @@map("_tblsitextblprodutos")
+}
+
+model arvore {
+  id          Int     @id @default(autoincrement())
+  pessoa      String  @db.VarChar(100)
+  descendente String? @db.VarChar(100)
+}
+
+model tblacessorios {
+  acessID                Int                      @id @default(autoincrement()) @db.UnsignedInt
+  acessncm               String?                  @db.VarChar(85)
+  acessNome              String                   @db.VarChar(105)
+  acessDescricao         String                   @db.VarChar(3000)
+  acessImgPQ             String                   @db.VarChar(85)
+  acessImgMEDIA          String?                  @db.VarChar(85)
+  acessImgGD             String?                  @db.VarChar(85)
+  acessMedidas           String?                  @db.VarChar(45)
+  acessDestaque          Boolean?                 @default(dbgenerated("b'0'")) @db.Bit(1)
+  acessCheck             Int?                     @default(0)
+  acessName              String?                  @db.VarChar(145)
+  acessDescription       String?                  @db.VarChar(4000)
+  acessNomeItaliano      String?                  @db.VarChar(145)
+  acessNomeEspanhol      String?                  @db.VarChar(145)
+  acessDescricaoItaliano String?                  @db.VarChar(4000)
+  acessDescricaoEspanhol String?                  @db.VarChar(4000)
+  acessImgPQ2            String?                  @db.VarChar(145)
+  acessImgPQ3            String?                  @db.VarChar(145)
+  acessImgPQ4            String?                  @db.VarChar(145)
+  acessImgGD2            String?                  @db.VarChar(145)
+  acessImgGD3            String?                  @db.VarChar(145)
+  acessImgGD4            String?                  @db.VarChar(145)
+  acessArqMorto          Int?                     @default(0)
+  descontox              Boolean?                 @default(false)
+  lanca                  Boolean?                 @default(false)
+  bseller                Boolean?                 @default(false)
+  romantico              Boolean?                 @default(false)
+  niver                  Boolean?                 @default(false)
+  bebe                   Boolean?                 @default(false)
+  ele                    Boolean?                 @default(false)
+  cestas                 Boolean?                 @default(false)
+  orquidea               Boolean?                 @default(false)
+  dataComemorativaok     Int?                     @default(1)
+  tutto_brasil           Int?                     @default(1)
+  peso                   Decimal?                 @default(1.000) @db.Decimal(4, 3)
+  acessviews             Int?                     @default(0)
+  buques                 Boolean?                 @default(true)
+  signos                 Boolean?                 @default(true)
+  times                  Boolean?                 @default(true)
+  prdViewIndice          Int?                     @default(0)
+  tblacessoriosxestoque  tblacessoriosxestoque[]
+  tbladminxtblacessorios tbladminxtblacessorios[]
+  tblsitextblacessorios  tblsitextblacessorios[]
+}
+
+model tblacessorioscategorias {
+  catID   Int     @id @default(autoincrement()) @db.UnsignedInt
+  catNome String  @db.VarChar(105)
+  ativo   Boolean @db.Bit(1)
+  ncm     String? @db.VarChar(45)
+}
+
+model tblacessos {
+  idacess Int       @id @default(autoincrement())
+  ip      String?   @db.VarChar(45)
+  data    DateTime? @default(now()) @db.Timestamp(0)
+}
+
+model tbladmin {
+  adminID                   Int                    @id @default(autoincrement()) @db.UnsignedInt
+  adminNomeEmpresa          String                 @db.VarChar(245)
+  adminRSocial              String?                @db.VarChar(100)
+  adminApelido              String                 @db.VarChar(245)
+  adminEmail                String                 @db.VarChar(305)
+  adminSenha                String?                @db.VarChar(345)
+  adminPrivSuper            Int?                   @default(0) @db.UnsignedTinyInt
+  adminPrivFatura           Boolean?               @default(false)
+  adminCep                  String?                @db.VarChar(25)
+  adminCCorrente            String?                @db.VarChar(45)
+  adminCCagencia            String?                @db.VarChar(45)
+  adminBanco                String?                @db.VarChar(45)
+  adminHmarcada             Int?                   @default(0) @db.UnsignedTinyInt
+  adminComLimit             Int?                   @default(0) @db.UnsignedInt
+  adminSemMatLimit          Int?                   @default(0) @db.UnsignedInt
+  adminSemVespLimit         Int?                   @default(0) @db.UnsignedInt
+  adminSemNotLimit          Int?                   @default(0) @db.UnsignedInt
+  adminSabMatLimit          Int?                   @default(0) @db.UnsignedInt
+  adminSabVespLimit         Int?                   @default(0) @db.UnsignedInt
+  adminSabNotLimit          Int?                   @default(0) @db.UnsignedInt
+  adminDomMatLimit          Int?                   @default(0) @db.UnsignedInt
+  adminDomVespLimit         Int?                   @default(0) @db.UnsignedInt
+  adminDomNotLimit          Int?                   @default(0) @db.UnsignedInt
+  adminHmarcadaInicio       Int?                   @default(0) @db.UnsignedInt
+  adminHmarcadaFim          Int?                   @default(0) @db.UnsignedInt
+  adminHmarcadaValorParc    Decimal?               @default(0.00) @db.Decimal(4, 2)
+  adminHmarcadaValor        Decimal?               @default(0.00) @db.Decimal(4, 2)
+  adminHMLimit              Int?                   @default(25) @db.UnsignedInt
+  adminRua                  String?                @db.VarChar(245)
+  adminBairro               String?                @db.VarChar(145)
+  adminCidade               String?                @db.VarChar(145)
+  adminUf                   String?                @db.VarChar(145)
+  adminCpfCnpj              String?                @db.VarChar(95)
+  adminTelefones            String?                @db.VarChar(305)
+  adminMelhorDia            String?                @db.VarChar(5)
+  adminSite                 String?                @db.VarChar(505)
+  adminCoroas               String?                @db.VarChar(505)
+  cidadesID                 Int?                   @default(0)
+  adminAtivo                Int?                   @default(1)
+  adminCnpj                 String?                @db.VarChar(45)
+  adminie                   String?                @db.VarChar(45)
+  adminTelefone2            String?                @db.VarChar(45)
+  adminCelular              String?                @db.VarChar(45)
+  adminWebsite              String?                @db.VarChar(45)
+  adminQtdFloristas         String?                @db.VarChar(2)
+  adminQtdEntregadores      String?                @db.VarChar(2)
+  adminAceitaCCnaoPresente  Boolean?               @default(dbgenerated("b'1'")) @db.Bit(1)
+  adminExpressa             Int?                   @default(0)
+  adminExpressaInicio       Int?                   @default(0)
+  adminExpressaFim          Int?                   @default(0)
+  adminExpressaValor        Int?                   @default(0)
+  adminExpressaValorParc    Int?                   @default(0)
+  adminNoturnoValor         Int?                   @default(0)
+  clicks                    Int?                   @default(0)
+  adminConv                 Int?                   @default(0)
+  adminNoMesmoDia           Int?                   @default(0)
+  adminNoMesmoDiaValor      Int?                   @default(0)
+  adminNoMesmoDiaHoraLimite Int?                   @default(0)
+  adminAgendada             Int?                   @default(0)
+  adminAgendadaPeriodo      Int?                   @default(0)
+  adminAgendadaValor        Int?                   @default(0)
+  acaoid                    Int?                   @default(0) @db.UnsignedInt
+  tbladminxtblprodutos      tbladminxtblprodutos[]
+  tblcidades                tblcidades?            @relation(fields: [cidadesID], references: [cidadesID], onDelete: NoAction, onUpdate: NoAction, map: "kcidades")
+  tbladminhm                tbladminhm[]
+  tblmsg                    tblmsg[]
+  tblpedidos                tblpedidos[]
+
+  @@index([cidadesID], map: "fk_cidades_idx")
+}
+
+model tbladmindias {
+  diaID      Int       @id @default(autoincrement())
+  data       DateTime? @db.Timestamp(0)
+  tipo       Int?
+  cidadesID  Int?
+  horaLimite Int?      @default(14)
+
+  @@index([cidadesID], map: "fkcidades_idx")
+}
+
+model tbladminhm {
+  hmID     Int      @id @default(autoincrement()) @db.UnsignedInt
+  adminID  Int      @db.UnsignedInt
+  hmHora   String   @db.VarChar(10)
+  hmAtivo  Boolean? @default(dbgenerated("b'1'")) @db.Bit(1)
+  tbladmin tbladmin @relation(fields: [adminID], references: [adminID], onDelete: NoAction, onUpdate: NoAction, map: "FK_tblAdminHM_1")
+
+  @@index([adminID], map: "FK_tblAdminHM_1")
+}
+
+model tblavaliacaosite {
+  idAvaliacao         Int      @unique(map: "id_UNIQUE") @default(autoincrement())
+  tipoAvaliacao       String   @db.VarChar(100)
+  starAvaliacao       Int
+  comentarioAvaliacao String?  @db.VarChar(1000)
+  dataAvaliacao       DateTime @default(now()) @db.Timestamp(0)
+}
+
+model tblbairros {
+  BairroID       Int              @id @default(autoincrement())
+  CidadeID       Int?
+  Descricao      String?          @db.VarChar(72)
+  Frete          Decimal?         @db.Decimal(8, 2)
+  Entrega        Int?             @db.UnsignedInt
+  lat            String?          @db.VarChar(45)
+  lon            String?          @db.VarChar(45)
+  infodata       String?          @db.VarChar(245)
+  bairro_seo1    String?          @db.VarChar(600)
+  bairro_seo2    String?          @db.VarChar(6000)
+  bairro_img     String?          @db.VarChar(145)
+  tblcidades     tblcidades?      @relation(fields: [CidadeID], references: [cidadesID], onDelete: NoAction, onUpdate: NoAction, map: "FK_tblBairros_1")
+  tbllogradouros tbllogradouros[]
+
+  @@index([CidadeID], map: "FK_tblBairro_1")
+}
+
+model tblbuscas {
+  idbusca      Int      @id @default(autoincrement())
+  palavrabusca String?  @db.VarChar(200)
+  databusca    DateTime @default(now()) @db.Timestamp(0)
+  qtdbusca     Int      @default(0)
+}
+
+model tblcampanhaemails {
+  emailid Int     @id @default(autoincrement())
+  emails  String? @db.VarChar(405)
+}
+
+model tblcategorias {
+  catID          Int     @id @default(autoincrement()) @db.UnsignedInt
+  catDescricao   String  @db.VarChar(95)
+  catAtivo       Boolean @default(dbgenerated("b'1'")) @db.Bit(1)
+  catDescription String? @db.VarChar(95)
+  prodAcess      Int?    @default(0)
+}
+
+model tblceps {
+  id   Int    @id @default(autoincrement()) @db.UnsignedInt
+  ceps String @db.VarChar(45)
+}
+
+model tblcidades {
+  cidadesID   Int          @id @default(0)
+  UF          Int?         @db.UnsignedInt
+  Descricao   String?      @db.VarChar(72)
+  CEP         String?      @db.VarChar(8)
+  Entrega     Int          @db.UnsignedInt
+  Frete       Int          @default(0)
+  ibge_code   String?      @db.VarChar(45)
+  uf_         String?      @db.VarChar(2)
+  orderm      Int?         @default(0)
+  lat         String?      @db.VarChar(75)
+  lon         String?      @db.VarChar(75)
+  infoData    String?      @db.VarChar(345)
+  cidade_seo1 String?      @db.VarChar(600)
+  cidade_seo2 String?      @map("cidade-seo2") @db.VarChar(6000)
+  cidade_img  String?      @map("cidade-img") @db.VarChar(145)
+  tbladmin    tbladmin[]
+  tblbairros  tblbairros[]
+  tbluf       tbluf?       @relation(fields: [UF], references: [uf_codigo], onDelete: NoAction, onUpdate: NoAction, map: "FK_tblCidades_1")
+
+  @@index([UF], map: "FK_tblCidades_1")
+}
+
+model tblclientes {
+  cliID                Int                    @id @default(autoincrement()) @db.UnsignedInt
+  tempID               String?                @db.VarChar(13)
+  cliNome              String?                @db.VarChar(200)
+  cliRazaoSocial       String?                @db.VarChar(225)
+  cliResponsavel       String?                @db.VarChar(245)
+  cliDoc               String?                @db.VarChar(150)
+  cliInsEstadual       String?                @db.VarChar(85)
+  cliFone              String?                @db.VarChar(150)
+  cliCelular           String?                @db.VarChar(170)
+  cliEmail             String?                @db.VarChar(300)
+  cliSenha             String?                @db.VarChar(250)
+  cliRecebeEmail       String?                @default("S") @db.Char(1)
+  cliNf                String?                @db.VarChar(1)
+  cliDiaAniv           String?                @db.VarChar(200)
+  cliMesAniv           String?                @db.VarChar(2)
+  cliSexo              String?                @db.Char(1)
+  cliPais              String?                @db.VarChar(145)
+  cliCep               String?                @db.VarChar(13)
+  cliEndExt            String?                @db.VarChar(300)
+  cliNumero            String?                @db.VarChar(200)
+  cliBlog              String?                @db.VarChar(300)
+  cliFacebook          String?                @db.VarChar(300)
+  cliOrkut             String?                @db.VarChar(300)
+  cliTwitter           String?                @db.VarChar(300)
+  tipoPessoa           Int?                   @default(1) @db.UnsignedInt
+  Pj                   Int?                   @default(0)
+  Ie                   String?                @db.VarChar(45)
+  end_interior         String?                @db.VarChar(405)
+  dtcadastro           String?                @db.VarChar(145)
+  dispositivo          String?                @db.VarChar(1055)
+  ip                   String?                @db.VarChar(45)
+  negativado           Int?                   @default(0)
+  clianiversario       Int?                   @default(0)
+  cliemailerro         Int?                   @default(0)
+  tblclientesalteracao tblclientesalteracao[]
+  tbldestinatarios     tbldestinatarios[]
+}
+
+model tblclientesalteracao {
+  cliID          Int          @id @default(autoincrement()) @db.UnsignedInt
+  cliIDantigo    Int?         @db.UnsignedInt
+  cliNome        String?      @db.VarChar(200)
+  cliDoc         String?      @db.VarChar(150)
+  cliFone        String?      @db.VarChar(150)
+  cliCelular     String?      @db.VarChar(17)
+  cliEmail       String?      @db.VarChar(300)
+  cliSenha       String?      @db.VarChar(250)
+  cliRecebeEmail String?      @db.Char(1)
+  cliNf          String?      @db.VarChar(1)
+  cliDiaAniv     String?      @db.VarChar(2)
+  cliMesAniv     String?      @db.VarChar(2)
+  cliSexo        String?      @db.Char(1)
+  cliPais        String?      @db.VarChar(145)
+  cliCep         String?      @db.VarChar(13)
+  cliEndExt      String?      @db.VarChar(300)
+  cliNumero      String?      @db.VarChar(200)
+  cliBlog        String?      @db.VarChar(300)
+  cliFacebook    String?      @db.VarChar(300)
+  cliOrkut       String?      @db.VarChar(300)
+  cliTwitter     String?      @db.VarChar(300)
+  tipoPessoa     Int?         @db.UnsignedInt
+  tblclientes    tblclientes? @relation(fields: [cliIDantigo], references: [cliID], onDelete: NoAction, onUpdate: NoAction, map: "FK_tblClientesAlteracao_1")
+
+  @@index([cliIDantigo], map: "FK_tblClientesAlteracao_1")
+}
+
+model tblcodigopromocional {
+  codPromoID    Int      @id @default(autoincrement()) @db.UnsignedInt
+  codigo        String   @db.VarChar(30)
+  dtInicio      DateTime @db.DateTime(0)
+  dtFim         DateTime @db.DateTime(0)
+  qtdAdesoes    Int      @default(0) @db.UnsignedInt
+  descricaoCod  String   @db.VarChar(465)
+  unico         Int      @default(0) @db.UnsignedInt
+  ativo         Int      @default(1) @db.UnsignedInt
+  valor         Decimal  @db.Decimal(8, 2)
+  porcentagem   Int?     @default(0)
+  intervaloData Int?
+}
+
+model tblconfig {
+  confid       Int       @id @default(autoincrement())
+  config       Int?
+  configfone   Int?
+  configchat   Int?
+  cotacao      Decimal?  @db.Decimal(10, 4)
+  cotacaoDate  DateTime? @db.Timestamp(0)
+  tblconfigcol String?   @db.VarChar(45)
+  siteID       Int?
+}
+
+model tblconfigvars {
+  idconfig      Int     @id @default(autoincrement())
+  siteID        Int     @db.UnsignedInt
+  custovariavel Decimal @db.Decimal(8, 2)
+  lucro         Decimal @db.Decimal(8, 2)
+  frete         Decimal @db.Decimal(8, 2)
+  imposto       Decimal @db.Decimal(8, 2)
+  cartao        Decimal @db.Decimal(8, 2)
+
+  @@index([siteID], map: "fksite_idx")
+}
+
+model tblcontaspagar {
+  id_cp                     Int                         @id
+  id_cpMoet                 Int?
+  descricao                 String?                     @db.VarChar(150)
+  ativo                     Int?                        @db.TinyInt
+  indice                    Int?
+  dre                       Int?
+  id_bco                    Int?
+  debcred                   String?                     @db.VarChar(3)
+  tblcontaspagar            tblcontaspagar?             @relation("tblcontaspagarTotblcontaspagar", fields: [id_cpMoet], references: [id_cp], onDelete: NoAction, onUpdate: NoAction, map: "fs")
+  other_tblcontaspagar      tblcontaspagar[]            @relation("tblcontaspagarTotblcontaspagar")
+  tblcontaspagarlancamentos tblcontaspagarlancamentos[]
+
+  @@index([id_cpMoet], map: "fs_idx")
+}
+
+model tblcontaspagarlancamentos {
+  idLanc         Int             @id @default(autoincrement())
+  id_cp          Int?
+  id_cpMoet      Int?
+  id_cpMoet_sub  Int?
+  lancData       DateTime?       @db.Timestamp(0)
+  lancValor      Decimal?        @db.Decimal(8, 2)
+  lancobs        String?         @db.VarChar(200)
+  banco          Int?
+  dtsys          DateTime?       @default(now()) @db.Timestamp(0)
+  replicar       Int?            @default(0)
+  tblcontaspagar tblcontaspagar? @relation(fields: [id_cp], references: [id_cp], onDelete: NoAction, onUpdate: NoAction, map: "id")
+
+  @@index([id_cp], map: "id_cpMoet_idx")
+}
+
+model tbldestinatarios {
+  destID          Int          @id @default(autoincrement()) @db.UnsignedInt
+  destNome        String?      @db.VarChar(400)
+  destCep         String?      @db.VarChar(12)
+  destnum         String?      @db.VarChar(299)
+  destcompl       String?      @db.VarChar(900)
+  cliID           Int          @db.UnsignedInt
+  destmsg         String?      @db.VarChar(10000)
+  destAnon        String?      @db.VarChar(45)
+  destassin       String?      @db.VarChar(299)
+  destObs         String?      @db.VarChar(1005)
+  tempID          String?      @db.VarChar(45)
+  destfone        String?      @db.VarChar(299)
+  destCidUf       String?      @db.VarChar(145)
+  destEndInterior String?      @db.VarChar(405)
+  zona            String?      @db.VarChar(45)
+  zonaDesc        String?      @db.VarChar(45)
+  tblclientes     tblclientes  @relation(fields: [cliID], references: [cliID], onDelete: NoAction, onUpdate: NoAction, map: "FK_tblDestinatario_1")
+  tblpedidos      tblpedidos[]
+
+  @@index([cliID], map: "FK_tblDestinatario_1")
+}
+
+model tblemails {
+  id       Int       @id @default(autoincrement())
+  email    String?   @db.VarChar(95)
+  ativo    Int?      @default(1)
+  enviado  Int?      @default(0)
+  cliID    Int?      @default(0)
+  datainc  DateTime? @db.Timestamp(0)
+  lido     Int?      @default(0)
+  erro     String?   @db.VarChar(1000)
+  pesquisa Int?      @default(0)
+}
+
+model tblemailsdev {
+  idemail Int     @id @default(autoincrement())
+  email   String? @db.VarChar(180)
+}
+
+model tblentregadores {
+  entID   Int     @id @default(autoincrement())
+  entnome String? @db.VarChar(45)
+  ativo   Int?    @default(0)
+}
+
+model tblerror {
+  id   Int       @id @default(autoincrement())
+  erro String    @db.VarChar(5000)
+  dt   DateTime? @default(now()) @db.Timestamp(0)
+}
+
+model tblestoquecategoria {
+  estCatId           Int                  @id @default(autoincrement())
+  estCatDesc         String               @db.VarChar(75)
+  estCatAtivo        Boolean              @default(dbgenerated("b'1'")) @db.Bit(1)
+  tblestoqueprodutos tblestoqueprodutos[]
+}
+
+model tblestoqueprejuizo {
+  prejuID        Int       @id @default(autoincrement())
+  estqprdid      Int
+  datalancamento DateTime? @default(now()) @db.Timestamp(0)
+
+  @@index([estqprdid], map: "fk_estprejuizo_idx")
+}
+
+model tblestoqueprodutos {
+  estqPrdid           Int                 @id @default(autoincrement())
+  estCatId            Int
+  estconferido        Boolean?            @default(false)
+  estproduto          String?             @db.VarChar(105)
+  estcusto            Decimal?            @default(0.00) @db.Decimal(8, 2)
+  estvenda            Decimal?            @default(0.00) @db.Decimal(8, 2)
+  estqtd              Int?                @default(0)
+  estimg              String?             @db.VarChar(105)
+  estbaixa            DateTime?           @default(now()) @db.Timestamp(0)
+  estativo            Boolean?            @default(true)
+  tblestoquecategoria tblestoquecategoria @relation(fields: [estCatId], references: [estCatId], onDelete: NoAction, onUpdate: NoAction, map: "fl_estoqueCategoria")
+
+  @@index([estCatId], map: "fl_estoqueCategoria_idx")
+}
+
+model tblflores {
+  floresId Int      @id @default(autoincrement())
+  flor     String?  @db.VarChar(45)
+  ativo    Boolean? @default(dbgenerated("b'1'")) @db.Bit(1)
+}
+
+model tblhomelist {
+  id         Int     @id @default(autoincrement())
+  indice     Int?    @default(0)
+  indice2    Int?    @default(0)
+  nome       String? @db.VarChar(65)
+  name       String? @db.VarChar(65)
+  abreviacao String? @db.VarChar(15)
+  ativo      Int?    @default(1)
+  siteID     Int?
+  link       String? @db.VarChar(605)
+  link_amp   String? @db.VarChar(255)
+  link_en    String? @db.VarChar(255)
+}
+
+model tbllogradouros {
+  LogradouroID         Int         @id @default(0)
+  BairroID             Int?
+  CEP                  String?     @db.VarChar(9)
+  Descricao            String?     @db.VarChar(72)
+  endereco_complemento String?     @db.VarChar(72)
+  zona                 String?     @db.VarChar(45)
+  z_desc               String?     @db.VarChar(45)
+  cep_novo             Int?        @default(0)
+  tblbairros           tblbairros? @relation(fields: [BairroID], references: [BairroID], onDelete: NoAction, onUpdate: NoAction, map: "FK_tblLogradouros_1")
+
+  @@index([BairroID], map: "FK_tblLogradouros_1")
+  @@index([CEP], map: "Index_1")
+}
+
+model tblmarketing {
+  acaoID                Int       @id @default(autoincrement())
+  acaoTipoID            Int
+  siteID                Int       @db.UnsignedInt
+  acaoNome              String    @db.VarChar(300)
+  acaoResumo            String?   @db.MediumText
+  acaoDescricao         String?   @db.LongText
+  acaoNomeIngles        String?   @db.VarChar(300)
+  acaoResumoIngles      String?   @db.VarChar(500)
+  acaoDescricaoIngles   String?   @db.VarChar(2100)
+  acaoNomeItaliano      String?   @db.VarChar(300)
+  acaoResumoItaliano    String?   @db.VarChar(500)
+  acaoDescricaoItaliano String?   @db.VarChar(2100)
+  acaoNomeEspanhol      String?   @db.VarChar(300)
+  acaoResumoEspanhol    String?   @db.VarChar(500)
+  acaoDescricaoEspanhol String?   @db.VarChar(2100)
+  indice                Int?      @default(0)
+  destaque              Int?      @default(0)
+  idmktcontent          String?   @default("#") @db.VarChar(40)
+  dataInc               DateTime? @default(now()) @db.Timestamp(0)
+  ativo                 Int?      @default(1)
+
+  @@index([siteID], map: "fk_site_idx")
+  @@index([acaoTipoID], map: "fk_tipo_idx")
+}
+
+model tblmarketingconteudo {
+  idmktcontent             Int                        @id @default(autoincrement()) @db.UnsignedInt
+  acaoID                   Int?                       @db.UnsignedInt
+  bannerinfo1              String?                    @db.VarChar(700)
+  bannerinfo2              String?                    @db.VarChar(900)
+  bannerinfo3              String?                    @db.VarChar(475)
+  bannerinfo4              String?                    @db.VarChar(2900)
+  bannerinfo5              String?                    @db.VarChar(12900)
+  bannerimg                String?                    @db.VarChar(100)
+  bannermicroimg           String?                    @db.VarChar(100)
+  bannerindice             Int?                       @default(0)
+  destaque                 Int?                       @default(0)
+  ativo                    Int?                       @default(1)
+  dataInc                  DateTime?                  @default(now()) @db.Timestamp(0)
+  menuChange               Int?                       @default(0)
+  linkamp                  String?                    @db.VarChar(645)
+  bannerimgAMP             String?                    @db.VarChar(145)
+  link_en                  String?                    @db.VarChar(145)
+  views                    Int?                       @default(0)
+  destaqueEn               Int?                       @default(0)
+  tblacessoriosxcategorias tblacessoriosxcategorias[]
+  tblmarcacaoxtblpedidos   tblmarcacaoxtblpedidos[]
+  tblprodutosxcategorias   tblprodutosxcategorias[]
+
+  @@index([acaoID], map: "fk-content_idx")
+}
+
+model tblmarketingtipo {
+  acaoTipoID Int     @id
+  tipo       String? @db.VarChar(305)
+}
+
+model tblmidias {
+  idMidia     Int      @id @default(autoincrement()) @db.UnsignedInt
+  midGoogle   String   @db.VarChar(300)
+  midFacebook String   @db.VarChar(300)
+  midTwitter  String   @db.VarChar(300)
+  midBlog     String   @db.VarChar(300)
+  midData     DateTime @default(now()) @db.Timestamp(0)
+}
+
+model tblmsg {
+  idMsg       Int       @id @default(autoincrement()) @db.UnsignedInt
+  adminID     Int       @db.UnsignedInt
+  msg         String    @db.VarChar(10000)
+  data        DateTime? @default(now()) @db.Timestamp(0)
+  dataleitura DateTime? @db.Timestamp(0)
+  tbladmin    tbladmin  @relation(fields: [adminID], references: [adminID], onDelete: NoAction, onUpdate: NoAction, map: "FK_tblmsg_1")
+
+  @@index([adminID], map: "FK_tblmsg_1")
+}
+
+model tblpedido_itens {
+  itemID    Int     @id @default(autoincrement()) @db.UnsignedInt
+  pedID     Int     @db.UnsignedInt
+  qtd       Int     @db.UnsignedInt
+  desconto  Decimal @db.Decimal(8, 2)
+  totalItem Decimal @db.Decimal(8, 2)
+  prdID     Int     @db.UnsignedInt
+  tipo      Int     @default(0) @db.UnsignedInt
+  plusID    Int?    @default(0) @db.UnsignedInt
+
+  @@index([prdID], map: "FK_tblPedido_Itens_2")
+  @@index([pedID], map: "fik_idx")
+}
+
+model tblpedidos {
+  pedID                  Int                      @id @default(autoincrement()) @db.UnsignedInt
+  tempID                 String                   @db.VarChar(50)
+  adminID                Int                      @default(196) @db.UnsignedInt
+  siteID                 Int                      @default(1) @db.UnsignedInt
+  cliID                  Int                      @db.UnsignedInt
+  stsID                  Int                      @default(1) @db.UnsignedInt
+  destID                 Int                      @db.UnsignedInt
+  pedDataPedido          DateTime                 @default(now()) @db.Timestamp(0)
+  pedDataEntrega         DateTime                 @db.DateTime(0)
+  Periodo                String                   @default("not applied") @db.VarChar(250)
+  PeriodoID              Int                      @db.UnsignedInt
+  Promo                  Decimal                  @default(0.00) @db.Decimal(8, 2)
+  PromoCod               String?                  @db.VarChar(90)
+  tipoPgto               Int                      @db.UnsignedInt
+  cartaoNome             String?                  @db.VarChar(620)
+  cartaoNumero           String?                  @db.VarChar(520)
+  cartaoMes              String?                  @db.VarChar(25)
+  cartaoAno              String?                  @db.VarChar(25)
+  cartaoCodSeg           String?                  @db.VarChar(245)
+  cartaoBandeira         String?                  @db.VarChar(105)
+  banco                  String?                  @default("0") @db.VarChar(105)
+  frete                  Decimal                  @default(0.00) @db.Decimal(8, 2)
+  parcelas               String?                  @default("1") @db.VarChar(200)
+  TID                    String?                  @default("") @db.VarChar(100)
+  valorAlteraPgto        Decimal                  @default(0.00) @db.Decimal(8, 2)
+  hmHorario              String?                  @db.VarChar(18)
+  hm                     Int?                     @default(0)
+  valorRepasse           Decimal?                 @default(0.00) @db.Decimal(8, 2)
+  verifica               String?                  @db.VarChar(145)
+  print                  Int                      @default(0)
+  nfenvio                Int?                     @default(0)
+  total                  Decimal?                 @default(0.00) @db.Decimal(8, 2)
+  H_marcada              Decimal?                 @default(0.00) @db.Decimal(8, 2)
+  Noturno                Decimal?                 @default(0.00) @db.Decimal(8, 2)
+  Rapida                 Decimal?                 @default(0.00) @db.Decimal(8, 2)
+  travaBaixaEstoque      Int?                     @default(0)
+  Atencao                String?                  @db.VarChar(500)
+  AlteracaoProduto       String?                  @db.VarChar(1000)
+  entID                  Int?                     @default(0)
+  entNome                String?                  @db.VarChar(65)
+  captura                Int?                     @default(0)
+  capturaRetorno         String?                  @db.VarChar(405)
+  numPedExterior         String?                  @db.VarChar(20)
+  valorPedExterior       String?                  @db.VarChar(10)
+  MerchantOrderId        String?                  @db.VarChar(145)
+  PA_1                   Int?                     @default(0)
+  PA_2                   Int?                     @default(0)
+  PA_3                   Int?                     @default(0)
+  PA_4                   Int?                     @default(0)
+  pa_consid_1            String?                  @db.VarChar(905)
+  pa_consid_2            String?                  @db.VarChar(905)
+  pa_consid_3            String?                  @db.VarChar(905)
+  pa_consid_4            String?                  @db.VarChar(905)
+  Pa_dataresposta        DateTime?                @db.Timestamp(0)
+  envioPA                Int?                     @default(0)
+  PaymentId              String?                  @db.VarChar(405)
+  AuthorizationCode      String?                  @db.VarChar(145)
+  ReturnMessage          String?                  @db.VarChar(145)
+  ReturnCode             String?                  @db.VarChar(145)
+  midia                  String?                  @db.VarChar(155)
+  colOrigin              String?                  @db.Text
+  marcacao               Int                      @default(0)
+  tblmarcacaoxtblpedidos tblmarcacaoxtblpedidos[]
+  tbladmin               tbladmin                 @relation(fields: [adminID], references: [adminID], onDelete: NoAction, onUpdate: NoAction, map: "FK_tblPedidos_4")
+  tbldestinatarios       tbldestinatarios         @relation(fields: [destID], references: [destID], onDelete: NoAction, onUpdate: NoAction, map: "FK_tblpedidos_2")
+  tblpedidosfotos        tblpedidosfotos[]
+
+  @@index([stsID], map: "FK_tblPedidos_3")
+  @@index([adminID], map: "FK_tblPedidos_4_idx")
+  @@index([destID], map: "FK_tblpedidos_2_idx")
+  @@index([siteID], map: "Fk_sites_idx")
+}
+
+model tblpedidosfotos {
+  fotoid     Int        @id @default(autoincrement())
+  pedid      Int        @db.UnsignedInt
+  img        String     @db.VarChar(100)
+  tblpedidos tblpedidos @relation(fields: [pedid], references: [pedID], onDelete: NoAction, onUpdate: NoAction, map: "fkpedidos")
+
+  @@index([pedid], map: "fk-pedidos_idx")
+}
+
+model tblprodutos {
+  prdID                Int                    @id @default(autoincrement()) @db.UnsignedInt
+  prdNome              String?                @db.VarChar(145)
+  prdNCM               String?                @default("06031900") @db.VarChar(45)
+  prdDescricao         String                 @db.VarChar(4000)
+  prdDescFlorista      String?                @db.VarChar(4000)
+  prdImgPq             String?                @db.VarChar(95)
+  prdImgGd             String?                @db.VarChar(95)
+  prdImgPq2            String?                @db.VarChar(95)
+  prdImgGd2            String?                @db.VarChar(95)
+  prdImgPq3            String?                @db.VarChar(95)
+  prdImgGd3            String?                @db.VarChar(95)
+  prdImgPq4            String?                @db.VarChar(95)
+  prdImgGd4            String?                @db.VarChar(95)
+  prdMedidas           String                 @db.VarChar(45)
+  prdDestaque          Boolean                @default(dbgenerated("b'0'")) @db.Bit(1)
+  temp                 String?                @db.VarChar(4000)
+  prdArqMorto          Boolean                @default(dbgenerated("b'0'")) @db.Bit(1)
+  prdName              String?                @db.VarChar(145)
+  prdDescription       String?                @db.VarChar(4000)
+  prdImgMedia          String?                @db.VarChar(95)
+  prdNomeEspanhol      String?                @db.VarChar(145)
+  prdNomeItaliano      String?                @db.VarChar(145)
+  prdDescricaoEspanhol String?                @db.VarChar(4000)
+  prdDescricaoItaliano String?                @db.VarChar(4000)
+  descontox            Boolean?               @default(false)
+  lanca                Boolean?               @default(false)
+  bseller              Boolean?               @default(false)
+  romantico            Boolean?               @default(false)
+  niver                Boolean?               @default(false)
+  bebe                 Boolean?               @default(false)
+  ele                  Boolean?               @default(false)
+  cestas               Boolean?               @default(false)
+  orquidea             Boolean?               @default(false)
+  dataComemorativa     DateTime?              @db.Timestamp(0)
+  dataComemorativaOk   Int                    @default(0)
+  tutto_brasil         Int?                   @default(0)
+  peso                 Decimal?               @default(1.000) @db.Decimal(4, 3)
+  reviewQtd            Int?                   @default(0)
+  prdviews             Int?                   @default(0)
+  reviewRate           Int?                   @default(0)
+  prdViewIndice        Int?                   @default(0)
+  views                Int?                   @default(0)
+  prdTags              String?                @db.VarChar(400)
+  buques               Boolean?               @default(false)
+  signos               Boolean?               @default(false)
+  times                Boolean?               @default(false)
+  prdReceita           String?                @db.VarChar(405)
+  tbladminxtblprodutos tbladminxtblprodutos[]
+  tblprodutosplus      tblprodutosplus[]
+  tblreviews           tblreviews[]
+
+  @@index([bebe], map: "bebe")
+  @@index([bseller], map: "bseller")
+  @@index([cestas], map: "cestas")
+  @@index([ele], map: "ele")
+  @@index([lanca], map: "lanca")
+  @@index([niver], map: "niver")
+  @@index([orquidea], map: "orquideas")
+  @@index([prdDescricao(length: 255)], map: "prddesc")
+  @@index([prdNome], map: "prdname")
+  @@index([romantico], map: "romatnico")
+}
+
+model tblprodutosgostados {
+  pgxid       Int      @id @default(autoincrement())
+  prodacessID Int      @db.UnsignedInt
+  tempID      String   @db.VarChar(15)
+  datainc     DateTime @default(now()) @db.Timestamp(0)
+
+  @@index([prodacessID], map: "fkprodutos_idx")
+}
+
+model tblprodutosplus {
+  plusID        Int          @id @default(autoincrement()) @db.UnsignedInt
+  prdID         Int?         @db.UnsignedInt
+  plusNome      String?      @db.VarChar(145)
+  plusDescricao String?      @db.VarChar(4000)
+  plusImgPq     String?      @db.VarChar(95)
+  plusImgGd     String?      @db.VarChar(95)
+  plusImgPq2    String?      @db.VarChar(95)
+  plusImgGd2    String?      @db.VarChar(95)
+  plusImgPq3    String?      @db.VarChar(95)
+  plusImgGd3    String?      @db.VarChar(95)
+  plusImgPq4    String?      @db.VarChar(95)
+  plusImgGd4    String?      @db.VarChar(95)
+  indice        Int?         @default(0)
+  ativo         Int?         @default(1)
+  tblprodutos   tblprodutos? @relation(fields: [prdID], references: [prdID], onDelete: NoAction, onUpdate: NoAction, map: "rkprd")
+
+  @@index([prdID], map: "rkprd_idx")
+}
+
+model tblreviews {
+  rvwID       Int         @id @default(autoincrement())
+  prdID       Int         @db.UnsignedInt
+  data        DateTime    @default(now()) @db.Timestamp(0)
+  review      String      @db.VarChar(4005)
+  cliente     String      @db.VarChar(45)
+  ratingvalue Int?        @default(5)
+  tblprodutos tblprodutos @relation(fields: [prdID], references: [prdID], onDelete: NoAction, onUpdate: NoAction, map: "fk_prd")
+
+  @@index([prdID], map: "fk_prd_idx")
+}
+
+model tblsites {
+  siteID      Int     @id @db.UnsignedInt
+  site        String  @db.VarChar(60)
+  ativo       Int     @default(1)
+  id_prodSite Int?
+  cor         String? @db.VarChar(15)
+}
+
+model tblstatus {
+  stsID                Int    @id @default(autoincrement()) @db.UnsignedInt
+  stsInterno           String @db.VarChar(100)
+  stsCliente           String @db.VarChar(100)
+  stsCorFundo          String @db.VarChar(45)
+  stsCorFont           String @db.VarChar(45)
+  stsClienteConsPedido Bytes  @db.Bit(10)
+  stsParcViewReduce    Bytes? @default(dbgenerated("b'1'")) @db.Bit(10)
+  stsParcView          Bytes  @default(dbgenerated("b'0'")) @db.Bit(10)
+  stsAdminView         Bytes  @default(dbgenerated("b'1'")) @db.Bit(10)
+  stsOrder             Int    @db.UnsignedInt
+  stsTextEmail         String @db.VarChar(5000)
+}
+
+model tbltemp {
+  tmpid              Int       @id @default(autoincrement())
+  tempID             String    @db.VarChar(20)
+  jaCadastro         Int?      @default(1)
+  tipoPessoa         Int?      @default(1) @db.UnsignedInt
+  Destinatario       Int       @default(0) @db.UnsignedInt
+  PRODUTO_ID         Int       @db.UnsignedInt
+  data               DateTime  @default(now()) @db.Timestamp(0)
+  tipo               Int       @db.UnsignedInt
+  Qtd                Int       @default(1) @db.UnsignedInt
+  dataEntrega        DateTime? @db.DateTime(0)
+  periodo            Int?      @default(0) @db.UnsignedInt
+  periodo_grab       String?   @db.VarChar(95)
+  prdValor           Decimal?  @db.Decimal(8, 2)
+  frete              Decimal   @default(0.00) @db.Decimal(8, 2)
+  promo              Decimal   @default(0.00) @db.Decimal(8, 2)
+  hm                 Decimal   @default(0.00) @db.Decimal(8, 2)
+  rap                Decimal   @default(0.00) @db.Decimal(8, 2)
+  codPromoID         String?   @db.VarChar(75)
+  entrega            Int?      @default(0) @db.UnsignedInt
+  hmHorario          String?   @db.VarChar(12)
+  total_itens        Decimal   @default(0.00) @db.Decimal(8, 2)
+  tipoPagto          Int?      @default(0) @db.UnsignedInt
+  cartaoNome         String?   @db.VarChar(300)
+  cartaoNumero       String?   @db.VarChar(305)
+  cartaoMes          String?   @db.VarChar(45)
+  cartaoAno          String?   @db.VarChar(45)
+  cartaoCodSeg       String?   @db.VarChar(45)
+  cartaoBandeira     String?   @db.VarChar(45)
+  banco              String?   @db.VarChar(45)
+  periodoSTR         String?   @db.VarChar(200)
+  cliID              Int?      @default(0) @db.UnsignedInt
+  destID             Int?      @default(0) @db.UnsignedInt
+  parcelas           String?   @db.VarChar(200)
+  cep                String?   @db.VarChar(45)
+  rua                String?   @db.VarChar(305)
+  cidade             String?   @db.VarChar(105)
+  bairro             String?   @db.VarChar(105)
+  uf                 String?   @db.VarChar(45)
+  numero             String?   @db.VarChar(500)
+  complemento        String?   @db.VarChar(500)
+  anonimo            Int?      @default(0)
+  cadastro_cep       String?   @db.VarChar(45)
+  dest_nome          String?   @db.VarChar(505)
+  dest_fone          String?   @db.VarChar(299)
+  destmsg            String?   @db.VarChar(10000)
+  destAssinatura     String?   @db.VarChar(405)
+  tipoCadastro_      String?   @db.VarChar(85)
+  cadnome_           String?   @db.VarChar(340)
+  cadcpf_            String?   @db.VarChar(140)
+  cadcelular         String?   @db.VarChar(140)
+  cadfone            String?   @db.VarChar(140)
+  cadEmail_          String?   @db.VarChar(225)
+  cadSenha_          String?   @db.VarChar(45)
+  caddtnasc_         String?   @db.VarChar(90)
+  cadMoroExt_        String?   @db.VarChar(5)
+  cadcep_            String?   @db.VarChar(90)
+  cadPJ_rsocial_     String?   @db.VarChar(155)
+  cadPJ_fantasia_    String?   @db.VarChar(155)
+  cadPJ_cnpj_        String?   @db.VarChar(105)
+  cadPJ_Ie_          String?   @db.VarChar(105)
+  cadPJ_Responsavel_ String?   @db.VarChar(105)
+  cadPJ_Ramais_      String?   @db.VarChar(105)
+  cadPJ_Email_       String?   @db.VarChar(205)
+  cadPJ_Senha_       String?   @db.VarChar(105)
+  cadPJ_Cep_         String?   @db.VarChar(45)
+  cad_endereco_      String?   @db.VarChar(205)
+  cad_end_exterior_  String?   @db.VarChar(605)
+  cad_end_numero_    String?   @db.VarChar(120)
+  cad_bairro_cid_uf_ String?   @db.VarChar(405)
+  cartaonome_        String?   @db.VarChar(190)
+  cartaoNumero_      String?   @db.VarChar(150)
+  cartaoMes_         String?   @default("0") @db.VarChar(45)
+  cartaoAno_         String?   @default("0") @db.VarChar(45)
+  cartaoParcelas_    String?   @default("1") @db.VarChar(45)
+  cartaocodseg_      String?   @db.VarChar(190)
+  cad_sex_           String?   @db.VarChar(45)
+  login_email        String?   @db.VarChar(140)
+  login_senha        String?   @db.VarChar(85)
+  termo              Int?      @default(0)
+  enderecoCepUnico_  String?   @db.VarChar(505)
+  noturno            Decimal?  @default(0.00) @db.Decimal(8, 2)
+  dispositivo        String?   @db.VarChar(1055)
+  ip                 String?   @default("") @db.VarChar(45)
+  plusID             Int?      @default(0) @db.UnsignedInt
+  porcentagem        Int?      @default(0)
+  zona               String?   @db.Text
+  zonaDetalhe        String?   @db.Text
+  pedID              Int?      @default(0)
+  colOrigin          String?   @db.Text
+}
+
+model tbltipodatas {
+  tipoDatasID        Int     @id @default(autoincrement()) @db.UnsignedInt
+  tipoDatasDescricao String  @db.VarChar(75)
+  ativo              Boolean @default(dbgenerated("b'0'")) @db.Bit(1)
+}
+
+model tbluf {
+  uf_codigo      Int          @id @default(0) @db.UnsignedInt
+  uf_sigla       String?      @db.Char(2)
+  uf_descricao   String?      @db.VarChar(72)
+  ativo          Int          @db.UnsignedInt
+  valordistancia Int?         @default(10)
+  qtddias        Int?         @default(2)
+  tblcidades     tblcidades[]
+}
