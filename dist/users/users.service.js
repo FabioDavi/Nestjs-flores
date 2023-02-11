@@ -9,25 +9,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PrismaService = void 0;
-const client_1 = require(".prisma/client");
+exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
-let PrismaService = class PrismaService extends client_1.PrismaClient {
-    constructor() {
-        super({ log: ['info', 'query'] });
+const prisma_service_1 = require("../prisma/prisma.service");
+let UsersService = class UsersService {
+    constructor(prisma) {
+        this.prisma = prisma;
     }
-    async onModuleInit() {
-        await this.$connect();
+    create(createUserDto) {
+        return 'This action adds a new user';
     }
-    enableShutdownHooks(app) {
-        this.$on('beforeExit', async () => {
-            await app.close();
-        });
+    findAll() {
+        return this.prisma.tbladminhm.findMany();
+    }
+    findOne(adminID) {
+        return 3;
+    }
+    update(id, updateUserDto) {
+        return `This action updates a #${id} user`;
+    }
+    remove(id) {
+        return `This action removes a #${id} user`;
     }
 };
-PrismaService = __decorate([
+UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [])
-], PrismaService);
-exports.PrismaService = PrismaService;
-//# sourceMappingURL=prisma.service.js.map
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+], UsersService);
+exports.UsersService = UsersService;
+//# sourceMappingURL=users.service.js.map
