@@ -17,7 +17,8 @@ export class UsersService {
   }
 
   findAll() {
-    return this.prisma.tbladminhm.findMany();
+    //return this.prisma.tbladminhm.findMany();
+    return null;
   }
 
   findOne(adminID: number) {
